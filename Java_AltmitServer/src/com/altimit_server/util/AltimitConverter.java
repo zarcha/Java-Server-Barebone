@@ -16,6 +16,7 @@ import java.util.*;
  */
 public class AltimitConverter {
 
+    //Gets a list of class types of the paramaters provided
     public static Class[] GetParameterClasses(Object[] paramaters){
         Class[] endParameters = new Class[paramaters.length];
 
@@ -25,6 +26,9 @@ public class AltimitConverter {
         return endParameters;
     }
 
+    //Creates a byte array of the message that will be sent.
+    //The first 4 bytes is the end size of the whole message
+    //The last 4 bytes is the message key used to identify the end of a message and later to be used for a security purpose
     public static byte[] SendConversion(String methodName, Object... args){
         List<byte[]> byteList = new ArrayList<>();
 
@@ -92,64 +96,64 @@ public class AltimitConverter {
         return byteArray;
     }
 
+    //Converts a Char to a btye array
     public static byte[] convertToByteArray(char value) {
-        byte[] bytes = new byte[3];
-        ByteBuffer buffer = ByteBuffer.allocate(bytes.length);
+        ByteBuffer buffer = ByteBuffer.allocate(3);
         buffer.put((byte)1);
         buffer.position(1);
         buffer.putChar(value);
         return buffer.array();
     }
 
+    //Converts a Int to a btye array
     public static byte[] convertToByteArray(int value) {
-        byte[] bytes = new byte[5];
-        ByteBuffer buffer = ByteBuffer.allocate(bytes.length);
+        ByteBuffer buffer = ByteBuffer.allocate(5);
         buffer.put((byte)2);
         buffer.position(1);
         buffer.putInt(value);
         return buffer.array();
     }
 
+    //Converts a Long to a btye array
     public static byte[] convertToByteArray(long value) {
-        byte[] bytes = new byte[9];
-        ByteBuffer buffer = ByteBuffer.allocate(bytes.length);
+        ByteBuffer buffer = ByteBuffer.allocate(9);
         buffer.put((byte)3);
         buffer.position(1);
         buffer.putLong(value);
         return buffer.array();
     }
 
+    //Converts a Short to a btye array
     public static byte[] convertToByteArray(short value) {
-        byte[] bytes = new byte[3];
-        ByteBuffer buffer = ByteBuffer.allocate(bytes.length);
+        ByteBuffer buffer = ByteBuffer.allocate(3);
         buffer.put((byte)4);
         buffer.position(1);
         buffer.putShort(value);
         return buffer.array();
     }
 
+    //Converts a Float to a btye array
     public static byte[] convertToByteArray(float value) {
-        byte[] bytes = new byte[5];
-        ByteBuffer buffer = ByteBuffer.allocate(bytes.length);
+        ByteBuffer buffer = ByteBuffer.allocate(5);
         buffer.put((byte)5);
         buffer.position(1);
         buffer.putFloat(value);
         return buffer.array();
     }
 
+    //Converts a Double to a btye array
     public static byte[] convertToByteArray(double value) {
-        byte[] bytes = new byte[9];
-        ByteBuffer buffer = ByteBuffer.allocate(bytes.length);
+        ByteBuffer buffer = ByteBuffer.allocate(9);
         buffer.put((byte)6);
         buffer.position(1);
         buffer.putDouble(value);
         return buffer.array();
     }
 
+    //Converts a String to a btye array
     public static byte[] convertToByteArray(String value) {
         Integer strLength = value.length();
-        byte[] byteString = new byte[strLength + 5];
-        ByteBuffer buffer = ByteBuffer.allocate(byteString.length);
+        ByteBuffer buffer = ByteBuffer.allocate(strLength + 5);
         buffer.put((byte)7);
         buffer.position(1);
         buffer.putInt(strLength);
@@ -159,6 +163,7 @@ public class AltimitConverter {
 
     }
 
+    //Converts a Boolean to a btye array
     public static byte[] convertToByteArray(boolean value) {
         byte[] array = new byte[2];
         array[0] = 8;
@@ -166,11 +171,7 @@ public class AltimitConverter {
         return array;
     }
 
-    public static byte convertToByte(byte[] array) {
-        return array[0];
-    }
-
-
+    //This is used to convert the byte array recieved from a client into the method name and paramaters for a method call
     public static List<Object> ReceiveConversion(byte[] array){
         //String methodName = mapMethod.get(array[0]);
         List<Object> paramaters = new ArrayList<>();
@@ -223,34 +224,42 @@ public class AltimitConverter {
         return paramaters;
     }
 
+    //Converts a byte array to a Char
     public static char convertToChar(byte[] array){
         return ByteBuffer.wrap(array).getChar();
     }
 
+    //Converts a byte array to a Int
     public static Integer convertToInteger(byte[] array){
         return new BigInteger(array).intValue();
     }
 
+    //Converts a byte array to a Long
     public static long convertToLong(byte[] array){
         return ByteBuffer.wrap(array).getLong();
     }
 
+    //Converts a byte array to a Short
     public static short convertToShort(byte[] array){
         return ByteBuffer.wrap(array).getShort();
     }
 
+    //Converts a byte array to a Float
     public static float convertToFloat(byte[] array){
         return ByteBuffer.wrap(array).getFloat();
     }
 
+    //Converts a byte array to a Double
     public static double convertToDouble(byte[] array){
         return ByteBuffer.wrap(array).getDouble();
     }
 
+    //Converts a byte array to a String
     public static String convertToString(byte[] array){
         return ByteBuffer.wrap(array).toString();
     }
 
+    //Converts a byte array to a Boolean
     public static boolean convertToBoolean(byte array){
         return (Byte.toString(array) == "1");
     }

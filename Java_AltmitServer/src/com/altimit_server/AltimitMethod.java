@@ -3,7 +3,6 @@ package com.altimit_server;
  * Created by Zach on 10/22/15.
  */
 
-import com.sun.tools.internal.xjc.reader.xmlschema.bindinfo.BIConversion;
 import org.reflections.Reflections;
 import org.reflections.scanners.*;
 import org.reflections.util.*;
@@ -38,7 +37,7 @@ public class AltimitMethod {
         }
     }
 
-    public static List<Method> GetAltimitMethods(String packageName){
+    private static List<Method> GetAltimitMethods(String packageName){
         System.out.println("Compiling list of methods...");
         List<ClassLoader> classLoadersList = new LinkedList<ClassLoader>();
         classLoadersList.add(ClasspathHelper.contextClassLoader());

@@ -1,6 +1,8 @@
-package com.altimit_server; /**
+ /**
  * Created by Zach on 10/20/15.
+  * this file is just an example file with a method that can be called from a client
  */
+ package com.altimit_server;
 
 import com.altimit_server.util.AltimitConverter;
 

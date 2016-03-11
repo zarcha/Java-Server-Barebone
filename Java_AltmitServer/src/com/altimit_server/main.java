@@ -95,6 +95,8 @@ public class main {
                     if (socket.isConnected()) { //we want to make sure we arent dealing with a client thats not there
                         Integer bufSize = in.available();
                         if (bufSize != 0 || fullMessage.length != 0) {
+
+                            //Lets see if this is an old message, new message, and if it needs to combine with an old message
                             if (fullMessage.length != 0 && bufSize != 0) {
                                 fullMessage = Arrays.copyOf(fullMessage, fullMessage.length + bufSize);
                                 byte[] newMessage = new byte[bufSize];
@@ -109,19 +111,30 @@ public class main {
                                 messageSize = 0;
                             }
 
+                            //If the message is not empty now then lets continue
                             if (messageSize == 0) {
+                                //Lets get the size of the next message
                                 messageSize= ByteBuffer.wrap(fullMessage, 0, 4).getInt();
-                                byte[] messageKey = Arrays.copyOfRange(fullMessage, messageSize - 4, messageSize);
+
+                                //Lets make sure this message is long enough to even check for a key
                                 if(messageSize <= fullMessage.length) {
+
+                                    //Get the last 4 bytes (should be the key)
+                                    byte[] messageKey = Arrays.copyOfRange(fullMessage, messageSize - 4, messageSize);
+
+                                    //Make sure the full message is here
                                     if (Arrays.equals(messageKey, key)) {
                                         currentMessage = new byte[messageSize - 8];
                                         messageOffset = 4;
                                         System.arraycopy(fullMessage, messageOffset, currentMessage, 0, currentMessage.length);
                                         messageOffset = messageSize;
 
+                                        //Lets get the convert the byte array message to a list of real variables
                                         List<Object> sentMessage = AltimitConverter.ReceiveConversion(currentMessage);
 
+                                        //Make sure this client has an identifier and if it doesnt then see if it is trying to set it. If not then do nothing!
                                         if (uuidSet) {
+                                            //Lets make a new thread and have it do what is needs to do with the message
                                             Thread t = new Thread(new Runnable() {
                                                 @Override
                                                 public void run() {
@@ -135,6 +148,7 @@ public class main {
                                             System.out.println("UUID has not been set...");
                                         }
 
+                                        //if there is more of a message then delete the stuff we just used and if not then reset data
                                         if (messageOffset != fullMessage.length) {
                                             fullMessage = Arrays.copyOfRange(fullMessage, messageOffset, fullMessage.length);
                                             fullMessageSize = fullMessage.length;
@@ -155,10 +169,13 @@ public class main {
             } catch (IOException e) {
                 System.out.println(e);
             } finally {
+                //If they crashed the party then kick them out
                 DisconnectUser(socket);
             }
         }
 
+
+        //this is used to set the UUID of the client so we can identify it and send its socket messages or delete it
         public void SetClientUUID(String sentUUID){
             UUID uuid = UUID.fromString(sentUUID);
 
@@ -172,6 +189,7 @@ public class main {
             }
         }
 
+        //This will call start calling the method its meant to call on the server
         public void InvokeMessage(List<Object> sentMessage){
             String methodName = (String)sentMessage.get(0);
             sentMessage.remove(0);
@@ -179,6 +197,7 @@ public class main {
             AltimitMethod.CallAltimitMethod(methodName, sentMessage.toArray());
         }
 
+        //If the client is not needed anymore this is used to diconnect the client
         public void DisconnectUser(Socket soc){
             if(out != null){
                 writers.remove(out);
