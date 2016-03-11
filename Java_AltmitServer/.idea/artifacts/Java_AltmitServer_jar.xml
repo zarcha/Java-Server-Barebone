@@ -3,7 +3,11 @@
     <output-path>$PROJECT_DIR$/out/artifacts/Java_AltmitServer_jar</output-path>
     <root id="archive" name="Java_AltmitServer.jar">
       <element id="module-output" name="Java_AltmitServer" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/hazelcast-all-3.5.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/reflections/reflections/0.9.10/reflections-0.9.10.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/google/guava/guava/15.0/guava-15.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/javassist/javassist/3.19.0-GA/javassist-3.19.0-GA.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/google/code/findbugs/annotations/2.0.1/annotations-2.0.1.jar" path-in-jar="/" />
+      <element id="library" level="project" name="hazelcast-all-3.5.3" />
       <element id="library" level="project" name="AltimitServer" />
     </root>
   </artifact>
