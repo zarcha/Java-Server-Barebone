@@ -1,5 +1,6 @@
 package com.altimit_server.util;
 
+import com.sun.javafx.scene.layout.region.Margins;
 import jdk.nashorn.internal.runtime.Debug;
 
 import javax.swing.*;
@@ -175,7 +176,7 @@ public class AltimitConverter {
     public static List<Object> ReceiveConversion(byte[] array){
         //String methodName = mapMethod.get(array[0]);
         List<Object> paramaters = new ArrayList<>();
-        for(int i = 0; i < array.length; i++){
+        for(int i = 0; i < array.length;){
             byte[] ar = null;
             Integer size = 0;
             Integer current = i;
@@ -212,11 +213,23 @@ public class AltimitConverter {
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
                     }
-                    i += length - 1;
+                    i += length;
                     break;
                 case 8:
                     paramaters.add(convertToBoolean(array[i+1]));
                     i += 1;
+                    break;
+                case 9:
+                    int length2 = convertToInteger(Arrays.copyOfRange(array, i+1, i+5));
+                    i += 5;
+                    try {
+                        String strUUID = convertToString(Arrays.copyOfRange(array, i, i + length2));
+                        UUID uuid = UUID.fromString(strUUID);
+                        paramaters.add(uuid);
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                    i += length2;
                     break;
             }
         }
@@ -256,7 +269,12 @@ public class AltimitConverter {
 
     //Converts a byte array to a String
     public static String convertToString(byte[] array){
-        return ByteBuffer.wrap(array).toString();
+        String newStr = "";
+        for(int i = 0; i < array.length; i++){
+            newStr += String.valueOf(array[i]);
+        }
+
+        return newStr;
     }
 
     //Converts a byte array to a Boolean
