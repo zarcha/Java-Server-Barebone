@@ -16,8 +16,8 @@ import java.util.UUID;
 public class Commander {
 
     @AltimitCmd
-    public void test1(String userUUID){
-        DataOutputStream out = main.userMap.get(UUID.fromString(userUUID));
+    public void test1(UUID sentUUID){
+        DataOutputStream out = main.userMap.get(sentUUID);
         try {
             out.write(AltimitConverter.SendConversion("msg", "hi"));
             System.out.println("Sent back a message");

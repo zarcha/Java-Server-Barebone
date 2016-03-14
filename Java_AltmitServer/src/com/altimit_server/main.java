@@ -143,7 +143,7 @@ public class main {
                                             });
                                             t.start();
                                         } else if (sentMessage.get(0).equals("SetClientUUID")){
-                                            SetClientUUID((String)sentMessage.get(1));
+                                            SetClientUUID((UUID)sentMessage.get(1));
                                         } else {
                                             System.out.println("UUID has not been set...");
                                         }
@@ -176,15 +176,15 @@ public class main {
 
 
         //this is used to set the UUID of the client so we can identify it and send its socket messages or delete it
-        public void SetClientUUID(String sentUUID){
-            UUID uuid = UUID.fromString(sentUUID);
+        public void SetClientUUID(UUID sentUUID){
+            //UUID uuid = UUID.fromString(sentUUID);
 
-            if(userMap.containsKey(uuid)){
+            if(userMap.containsKey(sentUUID)){
                 System.out.println("UUID has already been registed! Dropping client!...");
                 DisconnectUser(socket);
             } else {
                 uuidSet = true;
-                userMap.put(UUID.fromString(sentUUID), out);
+                userMap.put(sentUUID, out);
                 System.out.println("Clients UUID has been set...");
             }
         }

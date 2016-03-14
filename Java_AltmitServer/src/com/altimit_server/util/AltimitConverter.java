@@ -1,7 +1,10 @@
 package com.altimit_server.util;
 
 import com.sun.javafx.scene.layout.region.Margins;
+import com.sun.media.jfxmedia.track.Track;
 import jdk.nashorn.internal.runtime.Debug;
+import jdk.nashorn.internal.runtime.regexp.joni.ast.StringNode;
+import org.omg.IOP.Encoding;
 
 import javax.swing.*;
 import java.io.UnsupportedEncodingException;
@@ -86,8 +89,17 @@ public class AltimitConverter {
                 byteList.add(currentArr);
             }
 
+            byte[] key = {5, 9, 0, 4};
+            size += 8;
+
+            byte[] temp = Arrays.copyOfRange(convertToByteArray(size), 1, 5);
+
+            byteList.add(0, temp);
+            byteList.add(key);
+
             byteArray = new byte[size];
             Integer currentIndex = 0;
+
             for (byte[] byteArr : byteList) {
                 System.arraycopy(byteArr, 0, byteArray, currentIndex, byteArr.length);
                 currentIndex += byteArr.length;
@@ -176,7 +188,7 @@ public class AltimitConverter {
     public static List<Object> ReceiveConversion(byte[] array){
         //String methodName = mapMethod.get(array[0]);
         List<Object> paramaters = new ArrayList<>();
-        for(int i = 0; i < array.length;){
+        for(int i = 0; i < array.length; i++){
             byte[] ar = null;
             Integer size = 0;
             Integer current = i;
@@ -213,7 +225,7 @@ public class AltimitConverter {
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
                     }
-                    i += length;
+                    i += length - 1;
                     break;
                 case 8:
                     paramaters.add(convertToBoolean(array[i+1]));
@@ -226,10 +238,10 @@ public class AltimitConverter {
                         String strUUID = convertToString(Arrays.copyOfRange(array, i, i + length2));
                         UUID uuid = UUID.fromString(strUUID);
                         paramaters.add(uuid);
-                    } catch (UnsupportedEncodingException e) {
+                    } catch (IllegalArgumentException e) {
                         e.printStackTrace();
                     }
-                    i += length2;
+                    i += length2 - 1;
                     break;
             }
         }
@@ -269,12 +281,14 @@ public class AltimitConverter {
 
     //Converts a byte array to a String
     public static String convertToString(byte[] array){
-        String newStr = "";
-        for(int i = 0; i < array.length; i++){
-            newStr += String.valueOf(array[i]);
+        String temp = "";
+        try {
+            temp = new String(array, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
 
-        return newStr;
+        return  temp;
     }
 
     //Converts a byte array to a Boolean
